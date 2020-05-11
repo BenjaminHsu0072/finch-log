@@ -26,8 +26,8 @@ function paint(message, color) {
     else
         return message;
 }
-var flog = /** @class */ (function () {
-    function flog() {
+var finchLog = /** @class */ (function () {
+    function finchLog() {
         this.maxCount = 10000;
         this.maxLogFiles = 500;
         this.logDir = "./log";
@@ -35,9 +35,7 @@ var flog = /** @class */ (function () {
         this.currentWriteStream = undefined;
         this.count = 0;
     }
-    flog.prototype.flog = function () {
-    };
-    flog.prototype.delLog = function () {
+    finchLog.prototype.delLog = function () {
         if (!fs.existsSync(this.logDir)) {
             return;
         }
@@ -54,7 +52,7 @@ var flog = /** @class */ (function () {
             list = fs.readdirSync(this.logDir);
         }
     };
-    flog.prototype.log = function (message, color) {
+    finchLog.prototype.log = function (message, color) {
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir);
         }
@@ -76,6 +74,6 @@ var flog = /** @class */ (function () {
             }
         }
     };
-    return flog;
+    return finchLog;
 }());
-exports.flog = flog;
+exports.finchLog = finchLog;

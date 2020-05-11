@@ -25,17 +25,13 @@ function paint(message: string, color?: flogColor): string {
 }
 
 
-class flog {
-    maxCount = 10000;
-    maxLogFiles = 500;
-    logDir = "./log";
-    newLog = true;
-    currentWriteStream = undefined;
-    count = 0;
-
-    flog() {
-
-    }
+class finchLog {
+    public maxCount = 10000;
+    public maxLogFiles = 500;
+    public logDir = "./log";
+    public newLog = true;
+    public currentWriteStream = undefined;
+    public count = 0;
 
     delLog() {
         if (!fs.existsSync(this.logDir)) {
@@ -55,7 +51,7 @@ class flog {
         }
     }
 
-    log(message: string, color?: flogColor) {
+    public log(message: string, color?: flogColor) {
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir);
         }
@@ -79,4 +75,4 @@ class flog {
     }
 }
 
-export {flog, flogColor};
+export {finchLog, flogColor};
