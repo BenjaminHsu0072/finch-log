@@ -1,17 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.finchLogColor = exports.finchLog = void 0;
 var finch_tools_1 = require("finch-tools");
 var fs = require('fs');
 var path = require('path');
-var flogColor;
-(function (flogColor) {
-    flogColor[flogColor["green"] = 0] = "green";
-    flogColor[flogColor["red"] = 1] = "red";
-    flogColor[flogColor["yellow"] = 2] = "yellow";
-    flogColor[flogColor["yellowBG"] = 3] = "yellowBG";
-    flogColor[flogColor["redBG"] = 4] = "redBG";
-})(flogColor || (flogColor = {}));
-exports.flogColor = flogColor;
+/***
+ * 定义可绘制的颜色
+ */
+var finchLogColor;
+(function (finchLogColor) {
+    finchLogColor[finchLogColor["green"] = 0] = "green";
+    finchLogColor[finchLogColor["red"] = 1] = "red";
+    finchLogColor[finchLogColor["yellow"] = 2] = "yellow";
+    finchLogColor[finchLogColor["yellowBG"] = 3] = "yellowBG";
+    finchLogColor[finchLogColor["redBG"] = 4] = "redBG";
+})(finchLogColor || (finchLogColor = {}));
+exports.finchLogColor = finchLogColor;
+/***
+ * 绘制颜色的方法
+ * @param message 原始信息
+ * @param color 增加颜色后的信息
+ */
 function paint(message, color) {
     var logColorStyler = [
         ['\x1B[32m', '\x1B[39m'],
@@ -28,13 +37,14 @@ function paint(message, color) {
 }
 var finchLog = /** @class */ (function () {
     function finchLog() {
-        this.maxCount = 10000;
+        this.maxLinesInLogFile = 2000;
         this.maxLogFiles = 500;
         this.logDir = "./log";
         this.newLog = true;
         this.currentWriteStream = undefined;
         this.count = 0;
     }
+    //如果日志总数大于之前设定的日志，则删除多的文件
     finchLog.prototype.delLog = function () {
         if (!fs.existsSync(this.logDir)) {
             return;
@@ -52,6 +62,11 @@ var finchLog = /** @class */ (function () {
             list = fs.readdirSync(this.logDir);
         }
     };
+    /**
+     * 日志API
+     * @param message 信息
+     * @param color 颜色（可选）
+     */
     finchLog.prototype.log = function (message, color) {
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir);
@@ -65,9 +80,9 @@ var finchLog = /** @class */ (function () {
         if (this.currentWriteStream) {
             var theInfo = tp + ' : ' + message;
             this.currentWriteStream.write(theInfo + '\r\n');
-            console.log(paint(tp, flogColor.yellow) + " : " + paint(message, color));
+            console.log(paint(tp, finchLogColor.yellow) + " : " + paint(message, color));
             this.count++;
-            if (this.count > this.maxCount) {
+            if (this.count > this.maxLinesInLogFile) {
                 this.currentWriteStream.end();
                 this.newLog = true;
                 this.count = 0;

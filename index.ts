@@ -3,7 +3,10 @@ import {getReadableDate} from "finch-tools";
 const fs = require('fs');
 const path = require('path');
 
-enum flogColor {
+/***
+ * 定义可绘制的颜色
+ */
+enum finchLogColor {
     green,
     red,
     yellow,
@@ -11,7 +14,12 @@ enum flogColor {
     redBG
 }
 
-function paint(message: string, color?: flogColor): string {
+/***
+ * 绘制颜色的方法
+ * @param message 原始信息
+ * @param color 增加颜色后的信息
+ */
+function paint(message: string, color?: finchLogColor): string {
     let logColorStyler = [
         ['\x1B[32m', '\x1B[39m'],
         ['\x1B[31m', '\x1B[39m'],
@@ -26,14 +34,17 @@ function paint(message: string, color?: flogColor): string {
 
 
 class finchLog {
-    public maxCount = 10000;
-    public maxLogFiles = 500;
+
+    public maxLinesInLogFile:number = 2000;
+    public maxLogFiles:number = 500;
     public logDir = "./log";
+
     public newLog = true;
     public currentWriteStream = undefined;
     public count = 0;
 
-    delLog() {
+    //如果日志总数大于之前设定的日志，则删除多的文件
+    private delLog() {
         if (!fs.existsSync(this.logDir)) {
             return;
         }
@@ -51,7 +62,12 @@ class finchLog {
         }
     }
 
-    public log(message: string, color?: flogColor) {
+    /**
+     * 日志API
+     * @param message 信息
+     * @param color 颜色（可选）
+     */
+    public log(message: string, color?: finchLogColor) {
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir);
         }
@@ -64,9 +80,9 @@ class finchLog {
         if (this.currentWriteStream) {
             let theInfo = tp + ' : ' + message;
             this.currentWriteStream.write(theInfo + '\r\n');
-            console.log(paint(tp, flogColor.yellow) + " : " + paint(message, color));
+            console.log(paint(tp, finchLogColor.yellow) + " : " + paint(message, color));
             this.count++;
-            if (this.count > this.maxCount) {
+            if (this.count > this.maxLinesInLogFile) {
                 this.currentWriteStream.end();
                 this.newLog = true;
                 this.count = 0;
@@ -75,4 +91,4 @@ class finchLog {
     }
 }
 
-export {finchLog, flogColor};
+export {finchLog, finchLogColor};

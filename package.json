@@ -1,13 +1,13 @@
 {
   "name": "finch-log",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A mini console & txt file logger.",
   "license": "MIT",
   "main": "index.js",
   "keywords": [],
   "author": "BenjaminHsu",
   "dependencies": {
-    "finch-tools": "^0.1.0"
+    "finch-tools": "^0.2.2"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/BenjaminHsu0072/finch-log#readme",
   "devDependencies": {
-    "@types/node": "^13.11.0"
+    "@types/node": "^13.13.52"
   }
 }
